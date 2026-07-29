@@ -4,6 +4,12 @@ A desktop album downloader for goonbox.cr, written in Rust. Ships as a GUI app
 and a CLI over the same engine: concurrent chunked downloads, three independent
 throttles, resume-from-interrupt, and a live progress view.
 
+### [⬇ Download for Windows](https://github.com/Prezcot/goonbox-dl/releases/latest)
+
+No Rust needed — grab the `.exe` and run it. Windows will show a SmartScreen
+warning because the binary isn't code-signed; **More info → Run anyway**.
+Prefer to build it yourself? See [Build](#build) below.
+
 ---
 
 ## Read this first
