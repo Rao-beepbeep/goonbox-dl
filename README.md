@@ -217,6 +217,33 @@ exercised: range resume, a misaligned `206`, a stale full-length partial getting
 a `416`, retry through `503`s, and each of the three throttles measurably
 biting.
 
+## Building a release
+
+`cargo build --release` is fine for your own use. For binaries you hand to
+other people, remap the build paths first:
+
+```powershell
+$env:RUSTFLAGS = "--remap-path-prefix=$env:USERPROFILE\.cargo=/cargo " +
+                 "--remap-path-prefix=$PWD=/src " +
+                 "--remap-path-prefix=$env:USERPROFILE=/home"
+cargo clean --release
+cargo build --release
+```
+
+`strip = true` removes debug symbols but **not** the build paths compiled into
+panic messages, and those include the registry path of every dependency. A
+plain release build of this project embeds the building machine's username
+around 80 times. Cargo's `trim-paths` would handle this properly but is still
+unstable as of 1.89, hence the manual remap. `cargo clean --release` matters —
+without it, already-compiled dependencies keep their original paths.
+
+Verify before publishing:
+
+```powershell
+Select-String -Path .\target\release\goonbox-dl.exe -Pattern $env:USERNAME `
+              -Encoding Byte -AllMatches
+```
+
 ## Known limitations
 
 - **Resolving an album can't be cancelled.** Fetching the page list runs to
