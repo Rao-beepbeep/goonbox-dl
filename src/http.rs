@@ -5,6 +5,8 @@
 
 use std::time::Duration;
 
+use reqwest::header::{HeaderMap, HeaderValue, REFERER};
+
 pub const UA: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 /// Give up on a connection that will not open.
@@ -20,8 +22,12 @@ const READ_TIMEOUT: Duration = Duration::from_secs(60);
 const POOL_IDLE_TIMEOUT: Duration = Duration::from_secs(90);
 
 pub fn client() -> reqwest::Result<reqwest::Client> {
+    let mut headers = HeaderMap::new();
+    headers.insert(REFERER, HeaderValue::from_static("https://goonbox.cr/"));
+
     reqwest::Client::builder()
         .user_agent(UA)
+        .default_headers(headers)
         .connect_timeout(CONNECT_TIMEOUT)
         .read_timeout(READ_TIMEOUT)
         .pool_idle_timeout(POOL_IDLE_TIMEOUT)
