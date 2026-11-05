@@ -1,0 +1,14 @@
+   name: build
+   on: workflow_dispatch
+   jobs:
+     build:
+       runs-on: windows-latest
+       steps:
+         - uses: actions/checkout@v4
+         - run: cargo build --release
+         - uses: actions/upload-artifact@v4
+           with:
+             name: goonbox-dl
+             path: |
+               target/release/goonbox-dl.exe
+               target/release/goonbox-dl-cli.exe
